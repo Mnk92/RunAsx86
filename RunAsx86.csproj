@@ -7,5 +7,9 @@
     <OutputPath>bin\$(Configuration)</OutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PlatformTarget>x86</PlatformTarget>
+    <Authors>Mnk92</Authors>
+    <Description>Command line tool to run any cpu application in x86 mode.</Description>
+    <PackageProjectUrl>https://github.com/Mnk92/RunAsx86</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Mnk92/RunAsx86.git</RepositoryUrl>
   </PropertyGroup>
 </Project>
