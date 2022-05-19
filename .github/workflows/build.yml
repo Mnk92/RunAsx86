@@ -1,8 +1,11 @@
-name: sudo build
+name: RunAsx86 build
 on: [push, pull_request]
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+        matrix:
+            os: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
     - uses: actions/checkout@v3.0.0
     - name: Setup .NET
