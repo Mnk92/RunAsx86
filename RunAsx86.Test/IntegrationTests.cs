@@ -4,24 +4,30 @@ namespace RunAsx86.Test
     [TestClass]
     public class IntegrationTests
     {
+        private const string Mode =
+#if (DEBUG)
+        "Debug";
+#else
+        "Release";
+#endif
         private static Tuple<int, string> Execute(string arguments)
         {
+            var workingDirectory = Environment.CurrentDirectory;
             using var process = new Process();
-            process.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            process.StartInfo.FileName = "RunAsx86.exe";
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            process.StartInfo.FileName = Path.Combine(workingDirectory, "RunAsx86.exe");
             process.StartInfo.Arguments = arguments;
-            process.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
-            Assert.IsTrue(File.Exists(Path.Combine(Environment.CurrentDirectory, process.StartInfo.FileName)));
             process.Start();
+            Assert.IsTrue(File.Exists(process.StartInfo.FileName));
             var output = "";
             while (!process.HasExited)
             {
                 Assert.AreEqual("", process.StandardError.ReadToEnd());
-                var line = process.StandardOutput.ReadToEnd().TrimEnd(new[] { '\r', '\n' });
+                var line = process.StandardOutput.ReadToEnd().TrimEnd('\r', '\n');
                 if (line.Length > 0)
                 {
                     output += line;

@@ -19,4 +19,4 @@ jobs:
     - name: Publish windows
       run: dotnet publish -r win-x86 -c Release
     - name: Run tests
-      run: dotnet test -c Release --no-restore --no-build
+      run: dotnet test -c Release --no-restore --no-build --runtime win-x86

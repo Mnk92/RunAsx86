@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace RunAsx86
 {
@@ -11,17 +8,10 @@ namespace RunAsx86
         {
             try
             {
-                if (!args.Any())
-                {
-                    throw new ArgumentException("Please, go to application directory, provide path and arguments.");
-                }
-                var path = args.First();
-                var folder = Path.GetDirectoryName(path);
-                var target = Prepare(
-                    string.IsNullOrEmpty(folder) ? Path.Combine(Environment.CurrentDirectory, path) : path);
+                var parsed = ParametersParser.Parse(args);
 
-                AppDomain.CurrentDomain.AssemblyResolve += (_, e) => LoadFromSameFolder(e, folder);
-                var assembly = Assembly.LoadFile(target);
+                AppDomain.CurrentDomain.AssemblyResolve += (_, e) => LoadFromSameFolder(e, parsed.Folder);
+                var assembly = Assembly.LoadFile(parsed.AssemblyPath);
 
                 if (assembly.EntryPoint == null)
                 {
@@ -39,13 +29,6 @@ namespace RunAsx86
                 Console.WriteLine(ex.Message);
             }
             return -1;
-        }
-
-        private static string Prepare(string path)
-        {
-            if (File.Exists(path)) return path;
-            if (File.Exists(path + ".exe")) return $"{path}.exe";
-            throw new ArgumentException("Can't find executable.");
         }
 
         private static Assembly LoadFromSameFolder(ResolveEventArgs args, string folder)
