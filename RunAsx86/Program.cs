@@ -9,24 +9,32 @@ namespace RunAsx86
             try
             {
                 var parsed = ParametersParser.Parse(args);
-
-                AppDomain.CurrentDomain.AssemblyResolve += (_, e) => LoadFromSameFolder(e, parsed.Folder);
-                var assembly = Assembly.LoadFile(parsed.AssemblyPath);
-
-                if (assembly.EntryPoint == null)
+                if (parsed.Error.Length > 0)
                 {
-                    Console.WriteLine("Can't find entry point.");
-                    return -1;
+                    Console.WriteLine(parsed.Error);
                 }
-                var result = assembly.EntryPoint.Invoke(assembly.EntryPoint, new object[] { args.Skip(1).ToArray() });
-                if (result != null)
+                else
                 {
-                    return (int)result;
+                    AppDomain.CurrentDomain.AssemblyResolve += (_, e) => LoadFromSameFolder(e, parsed.Folder);
+                    var assembly = Assembly.LoadFile(parsed.AssemblyPath);
+
+                    if (assembly.EntryPoint == null)
+                    {
+                        Console.WriteLine("Can't find entry point.");
+                    }
+                    else
+                    {
+                        var result = assembly.EntryPoint.Invoke(assembly.EntryPoint, new object[] { args.Skip(1).ToArray() });
+                        if (result != null)
+                        {
+                            return (int)result;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex);
             }
             return -1;
         }

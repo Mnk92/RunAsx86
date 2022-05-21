@@ -4,12 +4,6 @@ namespace RunAsx86.Test
     [TestClass]
     public class IntegrationTests
     {
-        private const string Mode =
-#if (DEBUG)
-        "Debug";
-#else
-        "Release";
-#endif
         private static Tuple<int, string> Execute(string arguments)
         {
             var workingDirectory = Environment.CurrentDirectory;

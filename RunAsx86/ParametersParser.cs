@@ -2,32 +2,37 @@
 {
     internal static class ParametersParser
     {
-        public record Result(string Folder, string AssemblyPath);
+        public record Result(string Folder, string AssemblyPath, string Error);
 
         public static Result Parse(string[] args)
         {
+            var error = "";
+            var folder = "";
+            var assemblyPath = "";
             if (!args.Any())
             {
-                throw new ArgumentException("Please, go to application directory, provide path and arguments.");
+                error = "Please, go to application directory, provide path and arguments.";
             }
-
-            var assemblyPath = args.First();
-            var folder = Path.GetDirectoryName(assemblyPath);
-            if (string.IsNullOrEmpty(folder))
+            else
             {
-                assemblyPath = Path.Combine(Environment.CurrentDirectory, assemblyPath);
-            }
+                assemblyPath = args.First();
+                folder = Path.GetDirectoryName(assemblyPath);
+                if (string.IsNullOrEmpty(folder))
+                {
+                    assemblyPath = Path.Combine(Environment.CurrentDirectory, assemblyPath);
+                }
 
-            if (!File.Exists(assemblyPath))
-            {
-                assemblyPath = $"{assemblyPath}.exe";
                 if (!File.Exists(assemblyPath))
                 {
-                    throw new ArgumentException("Can't find executable.");
+                    assemblyPath = $"{assemblyPath}.exe";
+                    if (!File.Exists(assemblyPath))
+                    {
+                        error = "Can't find executable.";
+                    }
                 }
             }
 
-            return new Result(folder, assemblyPath);
+            return new Result(folder, assemblyPath, error);
         }
     }
 }
