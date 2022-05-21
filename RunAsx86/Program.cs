@@ -13,8 +13,7 @@ namespace RunAsx86
             {
                 if (!args.Any())
                 {
-                    Console.WriteLine("Please, go to application directory, provide path and arguments");
-                    return -1;
+                    throw new ArgumentException("Please, go to application directory, provide path and arguments.");
                 }
                 var path = args.First();
                 var folder = Path.GetDirectoryName(path);
@@ -37,7 +36,7 @@ namespace RunAsx86
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
             }
             return -1;
         }
@@ -45,8 +44,8 @@ namespace RunAsx86
         private static string Prepare(string path)
         {
             if (File.Exists(path)) return path;
-            if (File.Exists(path + ".exe")) return path + ".exe";
-            throw new ArgumentException("Nothing to execute: '{0}'", path);
+            if (File.Exists(path + ".exe")) return $"{path}.exe";
+            throw new ArgumentException("Can't find executable.");
         }
 
         private static Assembly LoadFromSameFolder(ResolveEventArgs args, string folder)
