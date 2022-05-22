@@ -32,5 +32,15 @@
             Assert.AreEqual(Path.GetFullPath(folder), Path.GetFullPath(detail.Folder));
             Assert.AreEqual(Path.Combine(folder, executable + ".exe"), detail.AssemblyPath);
         }
+
+        [TestMethod]
+        public void ExecuteNoError()
+        {
+            const string executable = "RunAsx86";
+            var detail = ParametersParser.Parse(new[] { Path.Combine(Environment.CurrentDirectory, executable) });
+            Assert.AreEqual("", detail.Error);
+            Assert.AreEqual(Environment.CurrentDirectory, Path.GetFullPath(detail.Folder));
+            Assert.AreEqual(Path.Combine(Environment.CurrentDirectory, executable + ".exe"), detail.AssemblyPath);
+        }
     }
 }
