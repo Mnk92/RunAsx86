@@ -1,4 +1,5 @@
 using System.Diagnostics;
+
 namespace RunAsx86.Test
 {
     [TestClass]
@@ -31,18 +32,11 @@ namespace RunAsx86.Test
         }
 
         [TestMethod]
-        public void ExecuteNoArgs()
+        [Ignore]
+        public void ExecuteItself()
         {
-            var (exitCode, output) = Execute("");
+            var (exitCode, output) = Execute("RunAsx86");
             Assert.AreEqual("Please, go to application directory, provide path and arguments.", output);
-            Assert.AreEqual(-1, exitCode);
-        }
-
-        [TestMethod]
-        public void ExecuteWithArgs()
-        {
-            var (exitCode, output) = Execute("cmd exit");
-            Assert.AreEqual("Can't find executable.", output);
             Assert.AreEqual(-1, exitCode);
         }
     }
